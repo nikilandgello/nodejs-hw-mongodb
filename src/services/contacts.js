@@ -2,6 +2,7 @@ import { ContactsCollection } from '../db/models/Contact.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
 export const getAllContacts = async ({
+  userId,
   page,
   perPage,
   sortBy,
@@ -11,7 +12,7 @@ export const getAllContacts = async ({
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  let contactsQuery = ContactsCollection.find();
+  let contactsQuery = ContactsCollection.find({ userId });
 
   Object.keys(filter).forEach((field) => {
     const value = filter[field];
@@ -34,19 +35,19 @@ export const getAllContacts = async ({
   return { data: contacts, ...paginationData };
 };
 
-export const getContactById = async (id) => {
-  const data = await ContactsCollection.findById(id);
+export const getContactById = async (userId, id) => {
+  const data = await ContactsCollection.findById({ _id: id, userId });
   return data;
 };
 
-export const createContact = async (payload) => {
-  const data = await ContactsCollection.create(payload);
+export const createContact = async (payload, userId) => {
+  const data = await ContactsCollection.create({ ...payload, userId });
   return data;
 };
 
-export const patchContact = async (id, payload, options = {}) => {
+export const patchContact = async (userId, id, payload, options = {}) => {
   const data = await ContactsCollection.findByIdAndUpdate(
-    { _id: id },
+    { _id: id, userId },
     payload,
     { new: true, includeResultMetadata: true, ...options },
   );
@@ -56,8 +57,8 @@ export const patchContact = async (id, payload, options = {}) => {
   return data.value;
 };
 
-export const deleteContact = async (id) => {
-  const data = await ContactsCollection.findOneAndDelete({ _id: id });
+export const deleteContact = async (userId, id) => {
+  const data = await ContactsCollection.findOneAndDelete({ _id: id, userId });
 
   return data;
 };
