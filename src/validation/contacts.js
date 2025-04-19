@@ -41,3 +41,7 @@ export const createContactsSchema = Joi.object({
     return true;
   }),
 });
+
+export const updateContactsSchema = createContactsSchema
+  .fork(['name', 'phoneNumber'], (schema) => schema.optional())
+  .min(1);
