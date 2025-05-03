@@ -1,0 +1,74 @@
+description: Bad Request error
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: BadRequestError
+        data:
+          type: object
+          required:
+            - message
+            - errors
+          properties:
+            message:
+              type: string
+              example: Bad Request
+            errors:
+              type: array
+              items:
+                type: object
+                required:
+                  - message
+                  - path
+                  - type
+                  - context
+                properties:
+                  message:
+                    type: string
+                    example: 'Username is required'
+                  path:
+                    type: array
+                    items:
+                      type: string
+                    example: ['name']
+                  type:
+                    type: string
+                    example: 'any.required'
+                  context:
+                    type: object
+                    required:
+                      - label
+                      - key
+                    properties:
+                      label:
+                        type: string
+                        example: 'name'
+                      key:
+                        type: string
+                        example: 'name'
+              example:
+                - message: 'Username is required'
+                  path: ['name']
+                  type: 'any.required'
+                  context:
+                    label: 'name'
+                    key: 'name'
+          example:
+            message: Bad Request
+            errors:
+              - message: 'Username is required'
+                path: ['name']
+                type: 'any.required'
+                context:
+                  label: 'name'
+                  key: 'name'
